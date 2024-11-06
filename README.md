@@ -44,7 +44,34 @@ git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 ```
 
-### 4. Authenticate GitHub CLI
+#### 3.1 Optional: Always use SSH instead of HTTPS with Git and GitHub
+
+```bash
+git config --global url."git@github.com:".insteadOf "https://github.com/"
+```
+
+### 4. Set Up SSH Keys
+
+Generate an SSH key with a custom name and add it to your GitHub account. The keys will be stored in the `.ssh` directory in your home folder.
+
+```bash
+# Generate a new SSH key with a custom name
+ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/github_ed25519
+
+# Start the SSH agent
+eval "$(ssh-agent -s)"
+
+# Add your SSH key to the agent
+ssh-add -K ~/.ssh/github_ed25519
+
+# Copy the SSH public key to your clipboard
+pbcopy < ~/.ssh/github_ed25519.pub
+```
+
+- Go to **GitHub** > **Settings** > **SSH and GPG keys**.
+- Click **New SSH key**, give it a title, and paste the key.
+
+### 5. Authenticate GitHub CLI
 
 Log in to your GitHub account:
 
@@ -54,35 +81,15 @@ gh auth login
 ```
 
 - Choose **GitHub.com**.
-- Select **HTTPS**.
+- Select **SSL**.
+- Select the key you created.
 - Log in with your browser when prompted.
 
-### 5. Set Up SSH Keys
-
-Generate an SSH key and add it to your GitHub account. The keys will be stored in the `.ssh` directory in your home folder.
-
-```bash
-# Generate a new SSH key
-ssh-keygen -t ed25519 -C "your.email@example.com"
-
-# Start the SSH agent
-eval "$(ssh-agent -s)"
-
-# Add your SSH key to the agent
-ssh-add -K ~/.ssh/id_ed25519
-
-# Copy the SSH public key to your clipboard
-pbcopy < ~/.ssh/id_ed25519.pub
-```
-
-- Go to **GitHub** > **Settings** > **SSH and GPG keys**.
-- Click **New SSH key**, give it a title, and paste the key.
-
-### 7. Downlaod the `github-backup` repository
+### 6. Downlaod the `github-backup` repository
 
 Download this repository.
 
-### 8. Run the Backup Script
+### 7. Run the Backup Script
 
 Make the script executable and run it:
 
@@ -100,7 +107,7 @@ The script will:
 - Clone repositories if they don't exist locally.
 - Fetch and pull updates for existing repositories.
 
-### 9. Automate Backups (Optional)
+### 8. Automate Backups (Optional)
 
 To schedule automatic backups, set up a cron job:
 
