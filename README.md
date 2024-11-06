@@ -44,12 +44,6 @@ git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 ```
 
-#### 3.1 Optional: Always use SSH instead of HTTPS with Git and GitHub
-
-```bash
-git config --global url."git@github.com:".insteadOf "https://github.com/"
-```
-
 ### 4. Set Up SSH Keys
 
 Generate an SSH key with a custom name and add it to your GitHub account. The keys will be stored in the `.ssh` directory in your home folder.
