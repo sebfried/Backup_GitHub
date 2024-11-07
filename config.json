@@ -1,4 +1,4 @@
 {
-  "exclude_orgs": [],
-  "include_repos": []
+  "exclude_orgs": ["", ""],
+  "include_repos": ["", ""]
 }
