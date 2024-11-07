@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script for macOS
+# GitHub Backup Script v1.0
 ##################################################################
 
 # Get the directory where the script is located

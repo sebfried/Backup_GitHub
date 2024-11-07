@@ -1,6 +1,8 @@
-# GitHub Backup (macOS)
+# Backup_GitHub (macOS)
 
-A script to backup all your GitHub repositories, including those from your personal account and organizations, into a local directory on macOS.
+A script to backup all your GitHub repositories, including those from your personal account and organizations, into a local directory on your Mac.
+
+_Plus: Exclude one or more of your organizations and include repositories from all over GitHub._
 
 ## Setup Instructions
 
@@ -25,7 +27,7 @@ Use Homebrew to install the necessary tools:
 # Install Git and Git LFS
 brew install git git-lfs
 
-# Install jq to hande JSON responses
+# Install jq to handle JSON responses
 brew install jq
 
 # Install GitHub CLI
@@ -82,15 +84,9 @@ gh auth login
 - Select the key you created.
 - Log in with your browser when prompted.
 
-### 6. Downlaod the `github-backup` repository
+### 6. Downlaod the `Backup_GitHub` repository
 
 Download this repository.
-
-Certainly! Here is the updated
-
-README.md
-
-with point 7 added to document the new functionality:
 
 ### 7. Additional Configuration (optional)
 
@@ -122,18 +118,3 @@ The script will:
 - Create directories for your account and each organization.
 - Clone repositories if they don't exist locally.
 - Fetch and pull updates for existing repositories.
-
-### 9. Automate Backups (optional)
-
-To schedule automatic backups, set up a cron job:
-
-```bash
-# Edit the crontab
-crontab -e
-```
-
-Add the following line to run the script daily at midnight:
-
-```bash
-0 0 * * * /FULL_PATH_TO_DIRECTORY/github-backup/backup.sh
-```
