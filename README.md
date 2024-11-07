@@ -25,6 +25,9 @@ Use Homebrew to install the necessary tools:
 # Install Git and Git LFS
 brew install git git-lfs
 
+# Install jq to hande JSON responses
+brew install jq
+
 # Install GitHub CLI
 brew install gh
 
@@ -83,7 +86,26 @@ gh auth login
 
 Download this repository.
 
-### 7. Run the Backup Script
+Certainly! Here is the updated
+
+README.md
+
+with point 7 added to document the new functionality:
+
+### 7. Additional Configuration (optional)
+
+The backup script allows you to **exclude some of your organizations** and **include additional repositories from GitHub** in the backup process, using a `config.json` file.
+
+#### Edit `config.json`
+
+```json
+{
+  "exclude_orgs": ["your_organization_1", "your_org_2"],
+  "include_repos": ["other_user2/repository1", "other_org3/repository2"]
+}
+```
+
+### 8. Run the Backup Script
 
 Make the script executable and run it:
 
@@ -101,7 +123,7 @@ The script will:
 - Clone repositories if they don't exist locally.
 - Fetch and pull updates for existing repositories.
 
-### 8. Automate Backups (Optional)
+### 9. Automate Backups (Optional)
 
 To schedule automatic backups, set up a cron job:
 
