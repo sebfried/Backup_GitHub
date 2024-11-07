@@ -2,7 +2,9 @@
 
 **A guide and script to back up and update all your GitHub repositories, including those from your organizations, in a local directory on your Mac.**
 
-_Plus: Exclude one or more of your organizations and include repositories from all over GitHub._
+**_Plus: Exclude one or more of your organizations and include repositories from all over GitHub!_**
+
+**Note:** The script uses the active Git user configured in your environment and relies on the GitHub CLI (gh) for high update performance, which is authenticated separately using `gh auth login`. The backup is performed with `git clone` to retrieve the full Git history.
 
 ## Setup Instructions
 
