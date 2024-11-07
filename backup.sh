@@ -9,6 +9,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Read configuration from config.json in the script directory
 CONFIG_FILE="$SCRIPT_DIR/config.json"
+LOG_FILE="$SCRIPT_DIR/backup.log"
+BACKUP_DIR="$SCRIPT_DIR/backup"
 
 # Check if config.json exists
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -23,22 +25,22 @@ INCLUDE_REPOS=($(jq -r '.include_repos[]' "$CONFIG_FILE" 2>/dev/null))
 
 # Ensure the GitHub CLI (gh) is installed and authenticated
 if ! command -v gh &>/dev/null; then
-    echo "Error: GitHub CLI (gh) is not installed. Please install it and authenticate." | tee -a backup.log
+    echo "Error: GitHub CLI (gh) is not installed. Please install it and authenticate." | tee -a "$LOG_FILE"
     exit 1
 fi
 
 # Check if gh git_protocol is set to ssh
 GIT_PROTOCOL=$(gh config get git_protocol)
 if [ "$GIT_PROTOCOL" != "ssh" ]; then
-    echo "Error: gh git_protocol is not set to 'ssh'." | tee -a backup.log
-    echo "Please set it using: gh config set git_protocol ssh" | tee -a backup.log
+    echo "Error: gh git_protocol is not set to 'ssh'." | tee -a "$LOG_FILE"
+    echo "Please set it using: gh config set git_protocol ssh" | tee -a "$LOG_FILE"
     exit 1
 fi
 
 # Check if jq is installed
 if ! command -v jq &>/dev/null; then
-    echo "Error: The 'jq' utility is required but not installed." | tee -a backup.log
-    echo "Install it using: brew install jq" | tee -a backup.log
+    echo "Error: The 'jq' utility is required but not installed." | tee -a "$LOG_FILE"
+    echo "Install it using: brew install jq" | tee -a "$LOG_FILE"
     exit 1
 fi
 
@@ -46,15 +48,11 @@ fi
 START_DIR=$(pwd)
 
 # Truncate the backup.log file at the start of the script
-: > "$START_DIR/backup.log"
+: > "$LOG_FILE"
 
-# Navigate to the directory of the script
-cd "$(dirname "$0")" || { echo "Error: Failed to change directory to script location." | tee -a "$START_DIR/backup.log"; exit 1; }
-
-# Create a backup directory if it does not exist
-BACKUP_DIR="backup"
-mkdir -p "$BACKUP_DIR" || { echo "Error: Failed to create backup directory." | tee -a "$START_DIR/backup.log"; exit 1; }
-cd "$BACKUP_DIR" || { echo "Error: Failed to change directory to backup directory." | tee -a "$START_DIR/backup.log"; exit 1; }
+# Create backup directory if it does not exist
+mkdir -p "$BACKUP_DIR" || { echo "Error: Failed to create backup directory." | tee -a "$LOG_FILE"; exit 1; }
+cd "$BACKUP_DIR" || { echo "Error: Failed to change directory to backup directory." | tee -a "$LOG_FILE"; exit 1; }
 
 # Function to check if an organization is in the exclude list
 is_excluded_org() {
