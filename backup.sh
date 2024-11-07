@@ -4,13 +4,16 @@
 # GitHub Backup Script for macOS
 ##################################################################
 
-# Read configuration from config.json
-CONFIG_FILE="config.json"
+# Get the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Read configuration from config.json in the script directory
+CONFIG_FILE="$SCRIPT_DIR/config.json"
 
 # Check if config.json exists
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "Error: Configuration file $CONFIG_FILE not found."
-    echo "Please create a config.json file."
+    echo "Please create a config.json file in $SCRIPT_DIR"
     exit 1
 fi
 
