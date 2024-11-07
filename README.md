@@ -1,6 +1,6 @@
 # Backup_GitHub (macOS)
 
-**A guide plus script to backup and update all your GitHub repositories, including those from your personal account and organizations, into a local directory on your Mac.**
+**A guide and script to back up and update all your GitHub code repositories, including those from your personal account and organizations, in a local directory on your Mac.**
 
 _Plus: Exclude one or more of your organizations and include repositories from all over GitHub._
 
@@ -10,7 +10,7 @@ Follow these steps to set up your macOS environment and run the backup script.
 
 ### 1. Install Homebrew
 
-Homebrew is a package manager for macOS that simplifies the installation of software.
+[Homebrew](https://github.com/Homebrew/brew) is a package manager for macOS that simplifies the installation of software.
 
 ```bash
 # Install Homebrew
@@ -19,7 +19,7 @@ Homebrew is a package manager for macOS that simplifies the installation of soft
 
 Follow any on-screen instructions to add Homebrew to your PATH.
 
-### 2. Install Git, Git LFS, and GitHub CLI
+### 2. Install Git, Git LFS, jq, and GitHub CLI
 
 Use Homebrew to install the necessary tools:
 
