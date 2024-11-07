@@ -1,6 +1,6 @@
 # Backup_GitHub (macOS)
 
-A script to backup all your GitHub repositories, including those from your personal account and organizations, into a local directory on your Mac.
+**A guide plus script to backup and update all your GitHub repositories, including those from your personal account and organizations, into a local directory on your Mac.**
 
 _Plus: Exclude one or more of your organizations and include repositories from all over GitHub._
 
