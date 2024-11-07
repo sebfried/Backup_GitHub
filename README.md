@@ -123,7 +123,7 @@ The script will:
 - Clone repositories if they don't exist locally.
 - Fetch and pull updates for existing repositories.
 
-### 9. Automate Backups (Optional)
+### 9. Automate Backups (optional)
 
 To schedule automatic backups, set up a cron job:
 
