@@ -1,6 +1,6 @@
 # Backup_GitHub (macOS)
 
-**A guide and script to back up and update all your GitHub code repositories, including those from your personal account and organizations, in a local directory on your Mac.**
+**A guide and script to back up and update all your GitHub repositories, including those from your organizations, in a local directory on your Mac.**
 
 _Plus: Exclude one or more of your organizations and include repositories from all over GitHub._
 
