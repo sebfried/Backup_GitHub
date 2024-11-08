@@ -1,4 +1,3 @@
 {
-  "exclude_orgs": ["", ""],
-  "include_repos": ["", ""]
+  "include_repos": ["sebfried/Backup_GitHub"]
 }

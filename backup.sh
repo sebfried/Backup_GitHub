@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script v1.01
+# GitHub Backup Script v1.1
 ##################################################################
 
 # Get the directory where the script is located
@@ -12,16 +12,18 @@ CONFIG_FILE="$SCRIPT_DIR/config.json"
 LOG_FILE="$SCRIPT_DIR/backup.log"
 BACKUP_DIR="$SCRIPT_DIR/backup"
 
-# Check if config.json exists
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Error: Configuration file $CONFIG_FILE not found."
-    echo "Please create a config.json file in $SCRIPT_DIR"
-    exit 1
-fi
+# Initialize empty arrays
+EXCLUDE_ORGS=()
+INCLUDE_REPOS=()
 
-# Parse excluded organizations and included repositories from config.json
-EXCLUDE_ORGS=($(jq -r '.exclude_orgs[]' "$CONFIG_FILE" 2>/dev/null))
-INCLUDE_REPOS=($(jq -r '.include_repos[]' "$CONFIG_FILE" 2>/dev/null))
+# Check if config.json exists
+if [ -f "$CONFIG_FILE" ]; then
+    # Parse excluded organizations and included repositories from config.json
+    EXCLUDE_ORGS=($(jq -r '.exclude_orgs[]' "$CONFIG_FILE" 2>/dev/null))
+    INCLUDE_REPOS=($(jq -r '.include_repos[]' "$CONFIG_FILE" 2>/dev/null))
+else
+    echo "No 'config.json' configuration file. Proceeding with default settings."
+fi
 
 # Ensure the GitHub CLI (gh) is installed and authenticated
 if ! command -v gh &>/dev/null; then
@@ -33,7 +35,7 @@ fi
 GIT_PROTOCOL=$(gh config get git_protocol)
 if [ "$GIT_PROTOCOL" != "ssh" ]; then
     echo "Error: gh git_protocol is not set to 'ssh'." | tee -a "$LOG_FILE"
-    echo "Please set it using: gh config set git_protocol ssh" | tee -a "$LOG_FILE"
+    echo "Please set it using: 'gh auth login' or 'gh config set git_protocol ssh'" | tee -a "$LOG_FILE"
     exit 1
 fi
 
@@ -169,7 +171,7 @@ for REPO_FULLNAME in "${INCLUDE_REPOS[@]}"; do
             echo "Error: Failed to clone $REPO_FULLNAME." | tee -a "$SCRIPT_DIR/backup.log"
         fi
     fi
-    cd "$SCRIPT_DIR/$BACKUP_DIR" || { echo "Error: Failed to return to backup directory." | tee -a "$SCRIPT_DIR/backup.log"; cd "$SCRIPT_DIR"; }
+    cd "$BACKUP_DIR" || { echo "Error: Failed to return to backup directory." | tee -a "$SCRIPT_DIR/backup.log"; cd "$SCRIPT_DIR"; }
 done
 
 echo "Backup process completed at $(date)." | tee -a "$SCRIPT_DIR/backup.log"

@@ -96,12 +96,16 @@ The backup script allows you to **exclude some of your organizations** and **inc
 
 #### Edit `config.json`
 
+Rename `example.config.json` to `config.json` and update it with your preferences:
+
 ```json
 {
-  "exclude_orgs": ["your_organization_1", "your_org_2"],
+  "exclude_orgs": ["your_organization_1", "your_org_name_2"],
   "include_repos": ["other_user2/repository1", "other_org3/repository2"]
 }
 ```
+
+You can exclude any organizations you don't want to back up and include any additional repositories from other users or organizations.
 
 ### 8. Run the Backup Script
 
