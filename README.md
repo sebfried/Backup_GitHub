@@ -4,7 +4,9 @@
 
 **_Plus: Exclude one or more of your organizations and include repositories from all over GitHub!_**
 
-**Note:** The script uses the active Git user configured in your environment and relies on the GitHub CLI (gh) for efficient updates, authenticated separately using `gh auth login`. The backup is performed with `git clone` to retrieve the full Git history.
+**Note:** The script uses the active Git user configured in your environment and relies on the GitHub CLI (`gh`) for efficient updates. Authentication is managed separately via `gh auth login`. The backup retrieves the full Git history with `git clone`.
+
+---
 
 ## Setup Instructions
 
@@ -12,94 +14,119 @@ Follow these steps to set up your macOS environment and run the backup script.
 
 ### 1. Install Homebrew
 
-[Homebrew](https://github.com/Homebrew/brew) is a package manager for macOS that simplifies the installation of software.
+[Homebrew](https://github.com/Homebrew/brew) is a package manager for macOS that simplifies software installation.
+
+#### Install Homebrew:
 
 ```bash
-# Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 Follow any on-screen instructions to add Homebrew to your PATH.
 
+---
+
 ### 2. Install Git, Git LFS, jq, and GitHub CLI
 
 Use Homebrew to install the necessary tools:
 
+#### Install Git, Git LFS, GitHub CLI, and jq:
+
 ```bash
-# Install Git and Git LFS
-brew install git git-lfs
+brew install git git-lfs gh jq
+```
 
-# Install jq to handle JSON responses
-brew install jq
+**Note:** [jq](https://jqlang.github.io/jq/) is a lightweight and flexible command-line JSON processor. The script uses it to process GitHub metadata and the `config.json` file.
 
-# Install GitHub CLI
-brew install gh
+**Initialize Git LFS:**
 
-# Initialize Git LFS
+```bash
 git lfs install
 ```
 
+---
+
 ### 3. Configure Git
 
-Set up your Git user information:
+Set up your Git user information with your GitHub credentials:
+
+#### Configure your Git username:
 
 ```bash
-# Configure your Git username
-git config --global user.name "Your Name"
-
-# Configure your Git email
-git config --global user.email "your.email@example.com"
+git config --global user.name "Your GitHub username"
 ```
+
+#### Configure your Git email:
+
+```bash
+git config --global user.email "your.github.email@example.com"
+```
+
+---
 
 ### 4. Set Up SSH Keys
 
 Generate an SSH key with a custom name and add it to your GitHub account. The keys will be stored in the `.ssh` directory in your home folder.
 
+#### Generate a new SSH key with a custom name:
+
 ```bash
-# Generate a new SSH key with a custom name
-ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/github_ed25519
+ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -C "your.github.email@example.com"
+```
 
-# Start the SSH agent
+#### Start the SSH agent:
+
+```bash
 eval "$(ssh-agent -s)"
+```
 
-# Add your SSH key to the agent
+#### Add your SSH key to the agent:
+
+```bash
 ssh-add -K ~/.ssh/github_ed25519
+```
 
-# Copy the SSH public key to your clipboard
+#### Copy the SSH public key to your clipboard:
+
+```bash
 pbcopy < ~/.ssh/github_ed25519.pub
 ```
 
-- Go to **GitHub** > **Settings** > **SSH and GPG keys**.
-- Click **New SSH key**, give it a title, and paste the key.
+#### Add the key on GitHub:
+
+1. Go to **GitHub** > **Settings** > **SSH and GPG keys**.
+2. Click **New SSH key**, give it a title, and paste the key.
+
+---
 
 ### 5. Authenticate GitHub CLI
 
-Log in to your GitHub account:
+#### Log in to your GitHub account:
 
 ```bash
-# Authenticate with GitHub CLI
 gh auth login
 ```
 
 - Choose **GitHub.com**.
-- Select **SSL**.
-- Select the key you created.
+- Select **SSH**.
+- Use the key you created.
 - Log in with your browser when prompted.
 
-### 6. Download the `Backup_GitHub` repository
+---
 
-Clone the repository to your local machine:
+### 6. Get the `Backup_GitHub` Repository
+
+#### Clone this repository:
 
 ```bash
-# Clone the Backup_GitHub repository
-git clone https://github.com/yourusername/Backup_GitHub.git ~/path/to/your/Backup_GitHub
+git clone https://github.com/sebfried/Backup_GitHub.git && cd Backup_GitHub
 ```
 
-Download this repository.
+---
 
 ### 7. Additional Configuration
 
-The backup script allows you to **exclude some of your organizations** and **include additional repositories from GitHub** in the backup process, using a `config.json` file.
+The backup script allows you to **exclude specific organizations** and **include additional repositories from GitHub** in the backup process, using a `config.json` file.
 
 #### Edit `config.json`
 
@@ -114,15 +141,21 @@ Rename `example.config.json` to `config.json` and update it with your preference
 
 You can exclude any organizations you don't want to back up and include any additional repositories from other users or organizations.
 
+---
+
 ### 8. Run the Backup Script
 
 Make the script executable and run it:
 
-```bash
-# Make the script executable
-chmod +x backup.sh
+#### Make the script executable:
 
-# Run the backup script
+```bash
+chmod +x backup.sh
+```
+
+#### Run the backup script:
+
+```bash
 ./backup.sh
 ```
 
@@ -132,12 +165,15 @@ The script will:
 - Clone repositories if they don't exist locally.
 - Fetch and pull updates for existing repositories.
 
+---
+
 ### 9. Set Up an Alias
 
-To simplify running the backup script, you can set up an alias for it:
+To simplify running the backup script, you can set up an alias for it.
+
+Add the alias using your current directory path:
 
 ```bash
-# Add the alias using your current directory path
 echo 'alias backup-github="'"$(pwd)/backup.sh"'"' >> ~/.zshrc && source ~/.zshrc
 ```
 
