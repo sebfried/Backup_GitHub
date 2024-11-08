@@ -1,6 +1,6 @@
 # Backup_GitHub (macOS)
 
-**A guide and script to back up and update all your GitHub repositories, including those from your organizations, in a local directory on your Mac.**
+**A guide and script to back up and update all your GitHub repositories, including those from your organizations, into a local directory on your Mac.**
 
 **_Plus: Exclude one or more of your organizations and include repositories from all over GitHub!_**
 
@@ -26,7 +26,7 @@ Follow any on-screen instructions to add Homebrew to your PATH.
 
 ---
 
-### 2. Install Git, Git LFS, jq, and GitHub CLI
+### 2. Install the required dependencies
 
 Use Homebrew to install the necessary tools:
 
@@ -94,7 +94,7 @@ pbcopy < ~/.ssh/github_ed25519.pub
 
 #### Add the key on GitHub:
 
-1. Go to **GitHub** > **Settings** > **SSH and GPG keys**.
+1. Go to https://github.com/settings/keys
 2. Click **New SSH key**, give it a title, and paste the key.
 
 ---
@@ -161,8 +161,9 @@ chmod +x backup.sh
 
 The script will:
 
-- Create directories for your account and each organization.
-- Clone repositories if they don't exist locally.
+- Create a `backup` directory in the same location as the script.
+- Set up directories for your account and each organization.
+- Clone repositories if they don’t already exist locally.
 - Fetch and pull updates for existing repositories.
 
 ---
