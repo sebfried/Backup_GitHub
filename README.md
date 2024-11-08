@@ -138,7 +138,7 @@ To simplify running the backup script, you can set up an alias for it:
 
 ```bash
 # Add the following alias to the end of your .zshrc
-echo 'alias backup-github="$(pwd)/backup.sh"' >> ~/.zshrc
+echo 'alias backup-github="~/path/to/your/backup.sh"' >> ~/.zshrc
 
 # Reload .zshrc
 source ~/.zshrc
