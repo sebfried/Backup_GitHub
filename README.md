@@ -86,11 +86,18 @@ gh auth login
 - Select the key you created.
 - Log in with your browser when prompted.
 
-### 6. Downlaod the `Backup_GitHub` repository
+### 6. Download the `Backup_GitHub` repository
+
+Clone the repository to your local machine:
+
+```bash
+# Clone the Backup_GitHub repository
+git clone https://github.com/yourusername/Backup_GitHub.git ~/path/to/your/Backup_GitHub
+```
 
 Download this repository.
 
-### 7. Additional Configuration (optional)
+### 7. Additional Configuration
 
 The backup script allows you to **exclude some of your organizations** and **include additional repositories from GitHub** in the backup process, using a `config.json` file.
 
@@ -124,3 +131,17 @@ The script will:
 - Create directories for your account and each organization.
 - Clone repositories if they don't exist locally.
 - Fetch and pull updates for existing repositories.
+
+### 9. Set Up an Alias
+
+To simplify running the backup script, you can set up an alias for it:
+
+```bash
+# Add the following alias to the end of your .zshrc
+echo 'alias backup-github="~/path/to/your/backup.sh"' >> ~/.zshrc
+
+# Reload .zshrc
+source ~/.zshrc
+```
+
+Now you can run the backup script from anywhere by simply typing `backup-github` in your terminal.
