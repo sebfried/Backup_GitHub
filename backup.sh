@@ -98,12 +98,18 @@ clone_or_update_repos() {
         if [ -d "$REPO_NAME/.git" ]; then
             cd "$REPO_NAME" || { echo "Error: Failed to access $REPO_NAME." | tee -a "$SCRIPT_DIR/backup.log"; continue; }
             LOCAL_UPDATED=$(date -u -r .git 2>/dev/null +"%Y-%m-%dT%H:%M:%SZ" || echo "1970-01-01T00:00:00Z")
-            # Convert both dates to UTC for accurate comparison
-            LAST_PUSH_DATE_UTC=$(date -u -d "$LAST_PUSH_DATE" +"%Y-%m-%dT%H:%M:%SZ")
-            LOCAL_UPDATED_UTC=$(date -u -d "$LOCAL_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
-
-            # Calculate the time difference in seconds
-            TIME_DIFF=$(( $(date -d "$LAST_PUSH_DATE_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
+            # Determine the platform and set the date command accordingly
+            if [[ "$(uname)" == "Darwin" ]]; then
+                # macOS
+                LAST_PUSH_DATE_UTC=$(date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$LAST_PUSH_DATE" +"%Y-%m-%dT%H:%M:%SZ")
+                LOCAL_UPDATED_UTC=$(date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$LOCAL_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
+                TIME_DIFF=$(( $(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$LAST_PUSH_DATE_UTC" +%s) - $(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$LOCAL_UPDATED_UTC" +%s) ))
+            else
+                # Linux
+                LAST_PUSH_DATE_UTC=$(date -u -d "$LAST_PUSH_DATE" +"%Y-%m-%dT%H:%M:%SZ")
+                LOCAL_UPDATED_UTC=$(date -u -d "$LOCAL_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
+                TIME_DIFF=$(( $(date -d "$LAST_PUSH_DATE_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
+            fi
 
             # Update if the remote is newer than local, considering a negative threshold of 3 minutes
             if [ "$TIME_DIFF" -gt -180 ]; then
