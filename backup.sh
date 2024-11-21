@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script v1.8
+# GitHub Backup Script v1.91
 ##################################################################
 
 # Get the directory where the script is located
@@ -111,8 +111,8 @@ clone_or_update_repos() {
                 TIME_DIFF=$(( $(date -d "$LAST_PUSH_DATE_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
             fi
 
-            # Update if the remote is newer than local, considering a negative threshold of 3 minutes
-            if [ "$TIME_DIFF" -gt -180 ]; then
+            # Update if the remote is newer than local, considering a negative threshold of 40 seconds
+            if [ "$TIME_DIFF" -gt -40 ]; then
                 echo "Updating $REPO_NAME..." | tee -a "$SCRIPT_DIR/backup.log"
                 git pull >> "$SCRIPT_DIR/backup.log" 2>&1
                 if [ $? -ne 0 ]; then
