@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script v1.1
+# GitHub Backup Script v1.2
 ##################################################################
 
 # Get the directory where the script is located
