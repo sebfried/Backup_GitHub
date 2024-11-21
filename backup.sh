@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script v1.3
+# GitHub Backup Script v1.4
 ##################################################################
 
 # Get the directory where the script is located
@@ -87,25 +87,25 @@ clone_or_update_repos() {
         return
     fi
     
-    # echo "API output for $OWNER repositories:" | tee -a "$SCRIPT_DIR/backup.log"
-    # cat repos.json | tee -a "$SCRIPT_DIR/backup.log"
+    echo "API output for $OWNER repositories:" | tee -a "$SCRIPT_DIR/backup.log"
+    cat repos.json | tee -a "$SCRIPT_DIR/backup.log"
 
     jq -c '.' repos.json | while read -r repo; do
         REPO_NAME=$(echo "$repo" | jq -r '.name')
         REPO_URL=$(echo "$repo" | jq -r '.ssh_url')
-        REMOTE_UPDATED=$(echo "$repo" | jq -r '.pushed_at')
+        LAST_PUSH_DATE=$(echo "$repo" | jq -r '.pushed_at')
 
         if [ -d "$REPO_NAME/.git" ]; then
             cd "$REPO_NAME" || { echo "Error: Failed to access $REPO_NAME." | tee -a "$SCRIPT_DIR/backup.log"; continue; }
-            LOCAL_UPDATED=$(git log -1 --format=%cI 2>/dev/null || echo "1970-01-01T00:00:00Z")
+            LOCAL_UPDATED=$(date -r .git/FETCH_HEAD +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "1970-01-01T00:00:00Z")
             # Convert both dates to UTC for accurate comparison
-            REMOTE_UPDATED_UTC=$(date -u -d "$REMOTE_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
+            LAST_PUSH_DATE_UTC=$(date -u -d "$LAST_PUSH_DATE" +"%Y-%m-%dT%H:%M:%SZ")
             LOCAL_UPDATED_UTC=$(date -u -d "$LOCAL_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
 
-            # echo "Remote updated: $REMOTE_UPDATED_UTC, Local updated: $LOCAL_UPDATED_UTC" | tee -a "$SCRIPT_DIR/backup.log"
+            echo "Remote updated: $LAST_PUSH_DATE_UTC, Local updated: $LOCAL_UPDATED_UTC" | tee -a "$SCRIPT_DIR/backup.log"
 
             # Calculate the time difference in seconds
-            TIME_DIFF=$(( $(date -d "$REMOTE_UPDATED_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
+            TIME_DIFF=$(( $(date -d "$LAST_PUSH_DATE_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
 
             # Update only if the remote is more than 300 seconds newer than local
             if [ "$TIME_DIFF" -gt 300 ]; then
