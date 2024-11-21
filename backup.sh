@@ -74,13 +74,21 @@ clone_or_update_repos() {
     # Initialize a flag to track if any repositories were updated or cloned
     updated_repos=false
 
-    # Get repository list with last pushed date
-    gh api "users/$OWNER/repos?per_page=100" --paginate --jq '.[] | {name: .name, ssh_url: .ssh_url, pushed_at: .pushed_at}' >repos.json
+    if [ "$OWNER" = "$USER_LOGIN" ]; then
+        # Use authenticated user endpoint for personal repos
+        gh api "user/repos?per_page=100&visibility=all&affiliation=owner" --paginate --jq '.[] | {name: .name, ssh_url: .ssh_url, pushed_at: .pushed_at, private: .private}' >repos.json
+    else
+        # Use organization/user endpoint for other repos
+        gh api "users/$OWNER/repos?per_page=100&type=all&visibility=all" --paginate --jq '.[] | {name: .name, ssh_url: .ssh_url, pushed_at: .pushed_at, private: .private}' >repos.json
+    fi
     if [ $? -ne 0 ]; then
-        echo "Error: Failed to fetch repository list for $OWNER." | tee -a "$SCRIPT_DIR/backup.log"
+        echo "Error: Failed to fetch repository list for $OWNER. Check $SCRIPT_DIR/backup.log for details." | tee -a "$SCRIPT_DIR/backup.log"
         cd "$SCRIPT_DIR"
         return
     fi
+    
+    # echo "API output for $OWNER repositories:" | tee -a "$SCRIPT_DIR/backup.log"
+    # cat repos.json | tee -a "$SCRIPT_DIR/backup.log"
 
     jq -c '.' repos.json | while read -r repo; do
         REPO_NAME=$(echo "$repo" | jq -r '.name')
