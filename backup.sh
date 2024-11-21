@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script v1.2
+# GitHub Backup Script v1.3
 ##################################################################
 
 # Get the directory where the script is located
@@ -98,8 +98,17 @@ clone_or_update_repos() {
         if [ -d "$REPO_NAME/.git" ]; then
             cd "$REPO_NAME" || { echo "Error: Failed to access $REPO_NAME." | tee -a "$SCRIPT_DIR/backup.log"; continue; }
             LOCAL_UPDATED=$(git log -1 --format=%cI 2>/dev/null || echo "1970-01-01T00:00:00Z")
+            # Convert both dates to UTC for accurate comparison
+            REMOTE_UPDATED_UTC=$(date -u -d "$REMOTE_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
+            LOCAL_UPDATED_UTC=$(date -u -d "$LOCAL_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
 
-            if [[ "$REMOTE_UPDATED" > "$LOCAL_UPDATED" ]]; then
+            # echo "Remote updated: $REMOTE_UPDATED_UTC, Local updated: $LOCAL_UPDATED_UTC" | tee -a "$SCRIPT_DIR/backup.log"
+
+            # Calculate the time difference in seconds
+            TIME_DIFF=$(( $(date -d "$REMOTE_UPDATED_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
+
+            # Update only if the remote is more than 300 seconds newer than local
+            if [ "$TIME_DIFF" -gt 300 ]; then
                 echo "Updating $REPO_NAME..." | tee -a "$SCRIPT_DIR/backup.log"
                 git pull >> "$SCRIPT_DIR/backup.log" 2>&1
                 if [ $? -ne 0 ]; then
