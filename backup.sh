@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################
-# GitHub Backup Script v1.5
+# GitHub Backup Script v1.7
 ##################################################################
 
 # Get the directory where the script is located
@@ -87,8 +87,8 @@ clone_or_update_repos() {
         return
     fi
     
-    echo "API output for $OWNER repositories:" | tee -a "$SCRIPT_DIR/backup.log"
-    cat repos.json | tee -a "$SCRIPT_DIR/backup.log"
+    # echo "API output for $OWNER repositories:" | tee -a "$SCRIPT_DIR/backup.log"
+    # cat repos.json | tee -a "$SCRIPT_DIR/backup.log"
 
     jq -c '.' repos.json | while read -r repo; do
         REPO_NAME=$(echo "$repo" | jq -r '.name')
@@ -102,7 +102,7 @@ clone_or_update_repos() {
             LAST_PUSH_DATE_UTC=$(date -u -d "$LAST_PUSH_DATE" +"%Y-%m-%dT%H:%M:%SZ")
             LOCAL_UPDATED_UTC=$(date -u -d "$LOCAL_UPDATED" +"%Y-%m-%dT%H:%M:%SZ")
 
-            echo "Remote updated: $LAST_PUSH_DATE_UTC, Local updated: $LOCAL_UPDATED_UTC" | tee -a "$SCRIPT_DIR/backup.log"
+            # echo "Remote updated: $LAST_PUSH_DATE_UTC, Local updated: $LOCAL_UPDATED_UTC" | tee -a "$SCRIPT_DIR/backup.log"
 
             # Calculate the time difference in seconds
             TIME_DIFF=$(( $(date -d "$LAST_PUSH_DATE_UTC" +%s) - $(date -d "$LOCAL_UPDATED_UTC" +%s) ))
